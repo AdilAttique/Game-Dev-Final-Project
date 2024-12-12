@@ -2,35 +2,37 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [Header("Target")]
-    public Transform target; // The player or object to follow
+    [Header("Target Settings")]
+    public Transform target; // The object to follow
 
-    [Header("Offset")]
-    public Vector3 offset = new Vector3(0, 5, -10); // Camera position offset relative to the target
+    [Header("Camera Settings")]
+    public Vector3 offset = new Vector3(0f, 0f, 0f); // Offset position relative to the target
+    public float followSpeed = 10f; // Speed of the camera movement
+    public float rotationSpeed = 5f; // Speed of the camera rotation
 
-    [Header("Smoothness")]
-    [Range(0.01f, 1f)]
-    public float smoothSpeed = 0.125f; // Adjust the smoothness of the camera's movement
+    [Header("Look Settings")]
+    public bool lookAtTarget = true; // Whether the camera should look at the target
 
-    [Header("Rotation")]
-    public bool followRotation = true; // If true, the camera will rotate with the target
-    public float rotationSmoothSpeed = 5f; // Adjust the speed of rotation smoothing
-
-    private void LateUpdate()
+    void LateUpdate()
     {
         if (target == null)
-            return;
-
-        // Smooth position update
-        Vector3 desiredPosition = target.position + offset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        transform.position = smoothedPosition;
-
-        // Smooth rotation update (optional)
-        if (followRotation)
         {
-            Quaternion desiredRotation = Quaternion.LookRotation(target.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSmoothSpeed * Time.deltaTime);
+            Debug.LogWarning("No target assigned for the camera to follow!");
+            return;
+        }
+
+        // Smoothly move the camera to the target position
+        Vector3 desiredPosition = target.position + target.TransformDirection(offset);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
+
+        // Smoothly rotate the camera to follow the target's rotation
+        Quaternion desiredRotation = Quaternion.LookRotation(target.position - transform.position);
+        transform.rotation = Quaternion.Lerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
+
+        // Optional: Ensure the camera is looking directly at the target
+        if (lookAtTarget)
+        {
+            transform.LookAt(target);
         }
     }
 }

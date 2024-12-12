@@ -109,12 +109,14 @@ namespace Assets.SuperGoalie.Scripts.Entities
 
         public bool IsBallWithChasingDistance()
         {
-            return DistanceOfBallToGoal() <= 20f;
+            return true;
+            //return DistanceOfBallToGoal() <= 20f;
         }
 
         public bool IsBallWithThreateningDistance()
         {
-            return DistanceOfBallToGoal() <= 30f;
+            return true;
+           //return DistanceOfBallToGoal() <= 30f;
         }
 
         public bool IsShotOnTarget()

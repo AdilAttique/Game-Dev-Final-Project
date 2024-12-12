@@ -1937,6 +1937,7 @@ GameObject:
   - component: {fileID: 9116644099704373422}
   - component: {fileID: 6166242753754909425}
   - component: {fileID: 1162914587571141949}
+  - component: {fileID: -7102684773970514303}
   m_Layer: 0
   m_Name: ThirdPersonController
   m_TagString: Untagged
@@ -2077,6 +2078,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0264b11af6743a43a58d7eec71768a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-7102684773970514303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5819134871172521063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 789f8f9011fa00f4a8495e406eed49de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5990819256334772342

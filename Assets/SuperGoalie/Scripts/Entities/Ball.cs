@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.SuperGoalie.Scripts.Managers;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 namespace Assets.SuperGoalie.Scripts.Entities
 {
@@ -123,10 +124,81 @@ namespace Assets.SuperGoalie.Scripts.Entities
             }
         }
 
-        private void OnCollisionEnter(Collision other) 
+       private void OnCollisionEnter(Collision other) 
+{
+    // Check if the colliding GameObject starts with "ThirdPersonController"
+    if (other.gameObject.name.StartsWith("ThirdPersonController"))
+    {
+        // Step 1: Update GameManager variables
+        gameManagerScript.hasPossesion = true;
+        if(gameManagerScript.player != null)
+        if(gameManagerScript.player.CompareTag("Teammate"))
         {
-            if(other.gameObject.name.Equals("ThirdPersonController"))
-                gameManagerScript.hasPossesion = true;
+            gameManagerScript.player.GetComponent<ThirdPersonUserControl>().enabled = false;
+            gameManagerScript.player.GetComponent<FieldPlayerAI>().enabled = true;
         }
+        gameManagerScript.player = other.gameObject;
+        gameManagerScript.animator = gameManagerScript.player.GetComponent<Animator>();
+        // Step 2: Find the target GameObject ("CameraFollower")
+        GameObject targetObject = FindGameObjectInScene("CameraFollower");
+        if (targetObject == null)
+        {
+            Debug.LogError("Target object 'CameraFollower' not found in the scene!");
+            return;
+        }
+        gameManagerScript.player.GetComponent<ThirdPersonUserControl>().enabled = true;
+        gameManagerScript.player.GetComponent<FieldPlayerAI>().enabled = false;
+        // Step 3: Deparent the target GameObject
+        targetObject.transform.SetParent(null);
+        
+        // Step 4: Reparent the target object to the new parent (player)
+        Transform newParent = gameManagerScript.player.transform; // Assign the new parent
+        if (newParent != null)
+        {
+            targetObject.transform.SetParent(newParent);
+            
+            // Step 5: Set the relative local position
+            Vector3 relativePosition = new Vector3(0f, 2.3f, -4.46f);
+            targetObject.transform.localPosition = relativePosition;
+            Quaternion relativeRotation = Quaternion.Euler(10f, 0f, 0f); // Example rotation (10 degrees on X-axis)
+            targetObject.transform.localRotation = relativeRotation;
+            
+            Debug.Log($"Successfully reparented 'CameraFollower' to {newParent.name} with relative position {relativePosition}.");
+        }
+        else
+        {
+            Debug.LogError("New parent (gameManagerScript.player) is null!");
+        }
+    }
+
+    if(other.gameObject.name.StartsWith("Opponent"))
+    {
+        Debug.Log("POSSESION TO OPPONENT");
+        Debug.Log(other.gameObject.name);
+        gameManagerScript.player = other.gameObject;
+        gameManagerScript.animator = gameManagerScript.player.GetComponent<Animator>();
+
+            // Vector3 forwardOffset = gameManagerScript.player.transform.forward * 0.8f; // 0.8 units in the forward direction
+            // Vector3 targetPosition = gameManagerScript.player.transform.position + forwardOffset;
+
+            // // Update the ball's position
+            // transform.position = targetPosition;
+
+    }
+}
+
+
+        private GameObject FindGameObjectInScene(string name)
+    {
+        GameObject[] allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        foreach (GameObject obj in allGameObjects)
+        {
+            if (obj.name == name && obj.scene.isLoaded) // Ensure the object is in the current scene
+            {
+                return obj;
+            }
+        }
+        return null; // Return null if not found
+    }
     }
 }

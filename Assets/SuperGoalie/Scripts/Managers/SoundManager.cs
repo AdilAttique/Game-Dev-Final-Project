@@ -12,6 +12,7 @@ namespace Assets.SuperGoalie.Scripts.Managers
 
         public AudioSource _matchAmbience;
 
+        public AudioSource whistle;
         public void PlayBallKickedSound()
         {
             _ballKickAS.Play();
@@ -25,6 +26,11 @@ namespace Assets.SuperGoalie.Scripts.Managers
         public void PlayGoalScoredSound()
         {
             _goalAS.Play();
+        }
+
+        public void PlayWhistle()
+        {
+            whistle.Play();
         }
     }
 }
